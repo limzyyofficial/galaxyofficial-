@@ -1,7 +1,7 @@
 // ── CONFIG ────────────────────────────────────────────────────────
 const COUNTER_URL = 'counter.php';
-const DL_URL      = 'https://safefileku.com/download/VcHjhWQY5Mdl1jYl';
-const FILE_MB     = 3;
+const DL_URL      = 'https://www.mediafire.com/file/be8ovjjlr0j1nbx/Galaxy+Beta+2.2.apk/file';
+const FILE_MB     = 21.43;
 const FILE_KB     = FILE_MB * 1024;
 
 // ── ELEMENTS ──────────────────────────────────────────────────────
@@ -116,7 +116,7 @@ function startDownload() {
     // Trigger real download
     const a = document.createElement('a');
     a.href     = DL_URL;
-    a.download = 'NETYSV3.apk';
+    a.download = 'GALAXYV2.2.apk';
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
