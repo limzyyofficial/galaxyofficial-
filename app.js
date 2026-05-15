@@ -1,6 +1,11 @@
 // ── CONFIG ────────────────────────────────────────────────────────
-const COUNTER_URL = 'counter.php';
-const DL_URL      = 'https://www.mediafire.com/file/be8ovjjlr0j1nbx/Galaxy+Beta+2.2.apk/file';
+// counterapi.dev V1 — free, no auth, no backend needed (works on GitHub Pages)
+// Namespace & key bisa diganti, tapi harus unik
+const COUNT_NAMESPACE = 'galaxyofficial-limzyy';
+const COUNT_KEY       = 'downloads-v2';
+const COUNT_BASE      = 'https://api.counterapi.dev/v1';
+
+const DL_URL      = 'https://download851.mediafire.com/6bowahmx8q0gKJmIX-QFvXwQ0GmmHFHo_q2P0mH5T6lZExtrOmhMhpavTvwtIUMOj_QtaN7-lxO2etmQsiseArS15VJHhlm39ri4_9N9Klywzx7cilIYzvRZWQff4lxR-1kkYUWQdDMkjiTxfa7ic_ndF8tn5DCmJY-yormDF7I/be8ovjjlr0j1nbx/Galaxy+Beta+2.2.apk';
 const FILE_MB     = 21.43;
 const FILE_KB     = FILE_MB * 1024;
 
@@ -40,12 +45,12 @@ function fmtSize(kb) {
     : Math.floor(kb) + ' KB';
 }
 
-// ── DOWNLOAD COUNTER ──────────────────────────────────────────────
+// ── DOWNLOAD COUNTER (counterapi.dev V1 — works on static/GitHub Pages) ──
 async function fetchCount() {
   try {
-    const r = await fetch(COUNTER_URL + '?t=' + Date.now());
+    const r = await fetch(`${COUNT_BASE}/${COUNT_NAMESPACE}/${COUNT_KEY}`);
     const d = await r.json();
-    return d.count || 0;
+    return typeof d.count === 'number' ? d.count : null;
   } catch (e) {
     return null;
   }
@@ -53,20 +58,38 @@ async function fetchCount() {
 
 async function postDownload() {
   try {
-    await fetch(COUNTER_URL, { method: 'POST' });
-  } catch (e) {}
+    // /up menambah +1 dan mengembalikan nilai terbaru
+    const r = await fetch(`${COUNT_BASE}/${COUNT_NAMESPACE}/${COUNT_KEY}/up`);
+    const d = await r.json();
+    return typeof d.count === 'number' ? d.count : null;
+  } catch (e) {
+    return null;
+  }
 }
 
 // ── INIT STATS ────────────────────────────────────────────────────
-let curDl     = 0;
+// Ambil nilai terakhir dari localStorage sebagai fallback agar tidak kembali ke 0 saat refresh
+const LS_KEY  = 'galaxy_dl_count';
+const saved   = parseInt(localStorage.getItem(LS_KEY) || '0', 10);
+
+let curDl     = saved;   // mulai dari nilai tersimpan, bukan 0
 let curActive = rnd(1800, 3600);
-let curOnline = rnd(900, 2400);
+let curOnline = Math.round(curActive * (0.40 + Math.random() * 0.25)); // 40–65% dari aktif
+
+// Tampilkan nilai tersimpan langsung (tanpa animasi dari 0)
+if (elTotal) elTotal.textContent = curDl.toLocaleString('id-ID');
 
 async function initStats() {
   const count = await fetchCount();
-  curDl = count !== null ? count : 0;
-
-  animCount(elTotal,  0, curDl,     1600);
+  if (count !== null) {
+    const from = curDl;          // animasi dari nilai yang sudah tampil
+    curDl = count;
+    localStorage.setItem(LS_KEY, count); // simpan untuk refresh berikutnya
+    if (count !== from) {
+      animCount(elTotal, from, count, 1200);
+    }
+  }
+  // active & online tetap animasi dari 0 karena memang random
   animCount(elActive, 0, curActive, 1800);
   animCount(elOnline, 0, curOnline, 1300);
 }
@@ -79,28 +102,27 @@ setInterval(async () => {
   if (count !== null && count !== curDl) {
     animCount(elTotal, curDl, count, 900);
     curDl = count;
+    localStorage.setItem(LS_KEY, count);
   }
 }, 30000);
 
-// Drift active users setiap ~14 detik
+// Drift user aktif & online secara sinkron setiap ~12 detik
+// Online selalu 40–65% dari aktif agar angka konsisten dan masuk akal
 setInterval(() => {
-  const next = rnd(
-    Math.max(1200, curActive - 220),
-    Math.min(5000, curActive + 220)
+  const nextActive = rnd(
+    Math.max(1200, curActive - 200),
+    Math.min(5000, curActive + 200)
   );
-  animCount(elActive, curActive, next, 2000);
-  curActive = next;
-}, 14000);
+  // Online = 40–65% dari aktif, dengan sedikit variasi acak
+  const ratio      = 0.40 + Math.random() * 0.25;
+  const nextOnline = Math.round(nextActive * ratio);
 
-// Drift online count setiap ~10 detik
-setInterval(() => {
-  const next = rnd(
-    Math.max(600, curOnline - 160),
-    Math.min(3500, curOnline + 160)
-  );
-  animCount(elOnline, curOnline, next, 1500);
-  curOnline = next;
-}, 10000);
+  animCount(elActive, curActive, nextActive, 2000);
+  animCount(elOnline, curOnline, nextOnline, 1800);
+
+  curActive = nextActive;
+  curOnline = nextOnline;
+}, 12000);
 
 // ── DOWNLOAD FLOW ─────────────────────────────────────────────────
 function startDownload() {
@@ -121,14 +143,12 @@ function startDownload() {
     a.click();
     document.body.removeChild(a);
 
-    // +5 ke server counter
-    await postDownload();
-
-    // Refresh angka download
-    const count = await fetchCount();
-    if (count !== null) {
-      animCount(elTotal, curDl, count, 900);
-      curDl = count;
+    // +1 ke CountAPI dan langsung dapat nilai terbaru
+    const newCount = await postDownload();
+    if (newCount !== null) {
+      animCount(elTotal, curDl, newCount, 900);
+      curDl = newCount;
+      localStorage.setItem(LS_KEY, newCount); // simpan agar tidak kembali ke 0 saat refresh
     }
 
     progress.style.display = 'none';
