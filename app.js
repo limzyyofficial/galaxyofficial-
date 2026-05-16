@@ -138,7 +138,7 @@ function startDownload() {
     // Trigger real download
     const a = document.createElement('a');
     a.href     = DL_URL;
-    a.download = 'GALAXYV2.2.apk';
+    a.download = 'GALAXYV3.apk';
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -170,7 +170,7 @@ function simulateDownload(onDone) {
   const phases = [
     { label: 'Menghubungkan ke server...',  until: 6,   sMin: 0,    sMax: 60   },
     { label: 'Mengautentikasi...',          until: 14,  sMin: 60,   sMax: 200  },
-    { label: 'Mendownload GALAXYV2.apk...', until: 86,  sMin: 400,  sMax: 1200 },
+    { label: 'Mendownload GALAXYV3.apk...', until: 86,  sMin: 400,  sMax: 1200 },
     { label: 'Memverifikasi file...',      until: 95,  sMin: 500,  sMax: 850  },
     { label: 'Selesai!',                   until: 100, sMin: 700,  sMax: 950  },
   ];
