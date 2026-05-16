@@ -5,7 +5,7 @@ const COUNT_NAMESPACE = 'galaxyofficial-limzyy';
 const COUNT_KEY       = 'downloads-v2';
 const COUNT_BASE      = 'https://api.counterapi.dev/v1';
 
-const DL_URL      = 'https://download1085.mediafire.com/6ncrl0yjk6igocWqjvpYt2tRa15F8vzvuungC6WdDzR2e-rE6j5LCa-qjC7l4Er4CW2B31QdOMzRlGVEyoCocNpFQnbhhMarKk17pF4j49bJwCsxnyRC0mI3oGyxGH6XFIpChSL61W20rGpCctsvOs0pBbhARWcOmM-0tuj0jXH2Qg/wendfzx4lvjlj3o/Galaxy+Beta+V3.apk';
+const DL_URL      = 'https://www.mediafire.com/file/wendfzx4lvjlj3o/Galaxy_Beta_V3.apk/file?dkey=kzqv6iq3qzy&r=109';
 const FILE_MB     = 32.34;
 const FILE_KB     = FILE_MB * 1024;
 
