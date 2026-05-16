@@ -5,8 +5,8 @@ const COUNT_NAMESPACE = 'galaxyofficial-limzyy';
 const COUNT_KEY       = 'downloads-v2';
 const COUNT_BASE      = 'https://api.counterapi.dev/v1';
 
-const DL_URL      = 'https://www.mediafire.com/file/wendfzx4lvjlj3o/Galaxy_Beta_V3.apk/file?dkey=kzqv6iq3qzy&r=109';
-const FILE_MB     = 32.34;
+const DL_URL      = 'https://github.com/limzyyofficial/galaxyofficial-/raw/refs/heads/main/Galaxy%20Beta%20V3.apk';
+const FILE_MB     = 21.48;
 const FILE_KB     = FILE_MB * 1024;
 
 // ── ELEMENTS ──────────────────────────────────────────────────────
